@@ -891,15 +891,20 @@
             DOM.processingStatus.textContent = `Analyzing: ${chineseName}`;
 
             try {
-                const result = await callSEOAI(chineseName, originalEnglish, state.originalData);
+                const result = await callSEOAI(chineseName, originalEnglish, index, state.originalData);
 
-                state.optimizedData[index][3] = result.optimizedName;
-                state.optimizedData[index][4] = result.reason;
+                // Handle JSON array response format: [{"id": 0, "suggested": "...", "comment": "..."}]
+                const suggestedName = Array.isArray(result) ? result[0]?.suggested : result.suggested;
+                const reason = Array.isArray(result) ? result[0]?.comment : result.comment;
+
+                state.optimizedData[index][3] = suggestedName || originalEnglish;
+                state.optimizedData[index][4] = reason || 'No optimization needed';
 
                 // Determine if original was already good
-                const isGood = result.optimizedName.toLowerCase().trim() === originalEnglish.toLowerCase().trim() ||
-                              result.reason.toLowerCase().includes('already optimal') ||
-                              result.reason.toLowerCase().includes('already good');
+                const isGood = (suggestedName || '').toLowerCase().trim() === originalEnglish.toLowerCase().trim() ||
+                              (reason || '').toLowerCase().includes('already good') ||
+                              (reason || '').toLowerCase().includes('already optimal') ||
+                              (reason || '').toLowerCase().includes('無需優化');
 
                 updateRowStatus(index, isGood ? 'good' : 'optimized');
 
@@ -913,80 +918,52 @@
             updateRowInTable(index);
         }
 
-        async function callSEOAI(chineseName, englishName, contextData = null) {
-            const prompt = `You are an expert SEO consultant and Canadian grocery market localization specialist with deep expertise in Asian food product naming for Canadian grocery chains (T&T, Walmart, Costco, Save-On-Foods).
+        async function callSEOAI(chineseName, englishName, rowIndex, contextData = null) {
+            const prompt = `你是溫哥華在地人，同時是專業的 UberEats 菜單運營專家。
 
-TASK: Optimize Chinese food product names for Canadian grocery SEO. CRITICAL: Maintain CONSISTENT naming patterns across similar product families with different flavors/varieties.
+你的任務是優化以下菜單項目的英文名稱。
 
-CONTEXT:
-- You are optimizing a BATCH of products. Similar products (same type, different flavor) MUST share the same English naming STRUCTURE.
-- Product Family = all variants of the same core product (e.g., "Taiwanese Beef Noodle Soup Base" with different spice levels)
-- Within a family: Keep the BASE NAME identical, vary only the FLAVOR/MODIFIER consistently
+【目標】
+1. 【地道性】：剔除生硬翻譯，讓英文名稱自然道地，符合溫哥華多元文化消費者的口語習慣。
+2. 【UberEats SEO】：
+   - 使用高頻關鍵字：Ramen, Poke, Boba, Spicy, Crispy, House-made, Signature, Authentic, Fresh, Spicy, Mala, Mala XXXXX
+   - 增加吸引人的描述：House-made, Signature, Authentic, Fresh, Slow-cooked, Flame-grilled, Crispy
+   - 標註口感或辛辣度：Spicy Level 1-3, Mala (麻辣), Extra Crispy
+3. 【一致性】：同類產品（不同口味）保持統一的命名結構，只改變 FLAVOR MODIFIER。
 
-NAMING CONVENTION RULES (apply strictly):
+【命名規則】
+- 優先保留已知的 UberEats 搜尋關鍵字（客人會搜什麼你就放什麼）
+- 口味統一映射：
+  - 原味/招牌 → "Signature" 或 "Original"
+  - 香辣/微辣 → "Spicy" 或 "Mild Spicy"
+  - 麻辣 → "Mala"（這是溫哥華常見搜尋詞）
+  - 特辣/極辣 → "Extra Spicy" 或 "Very Spicy"
+  - 甜辣 → "Sweet Chili"
+  - 紅燒 → "Hong Shao"（authenticate）+ "Braised"
+  - 醬香/醬汁 → "in Sauce" 或 "with House Sauce"
+  - 炸物 → "Crispy" 或 "Extra Crispy"
+- SEO 結構：`[描述性形容詞] [核心產品名]`, `[口味] [核心產品名]`
+- 範例：
+  - 溫哥華人搜尋："spicy tonkotsu ramen" / "mala beef noodles" / "crispy chicken katsu"
+  - 錯誤："Spicy Pork Flavor Noodles With Soup"
+  - 正確："spicy tonkotsu ramen" 或 "mala beef brisket noodles"
 
-1. BASE NAME (core product) stays CONSISTENT across flavors:
-   - ✅ "spicy braised pork rice" / "original braised pork rice" (consistent base)
-   - ✅ "szechuan spicy wontons" / "szechuan mild wontons"
-   - ❌ "braised pork over rice" / "pork rice with sauce" (inconsistent)
+【輸入】
+- 行號: ${rowIndex}
+- 中文名稱: "${chineseName}"
+- 目前英文名稱: "${englishName}"
 
-2. FLAVOR/MODIFIER standardization (MUST use these exact mappings):
-   - 原味 / 原汁 → "original"
-   - 香辣 / 辣味 / 微辣 / 麻辣 → "spicy" (or "mala" for numbing-spicy specifically)
-   - 特辣 / 超辣 / 极辣 → "extra spicy" or "very spicy"
-   - 甜辣 → "sweet chili"
-   - 酱香 / 酱汁 → "in sauce" or "with sauce"
-   - 红烧 → "hong shao" (authentic) or "braised" (accessible)
-   - 卤味 → "lu wei" (authentic) or "braised" (accessible)
-   - 炸鸡 → "fried chicken" (never just "fried" alone)
-   - 烤鸭 → "roasted duck"
-   - 牛肉 → "beef" | 猪肉 → "pork" | 鸡肉 → "chicken" | 羊肉 → "lamb"
+【輸出格式】
+請輸出純 JSON 陣列，不要包含任何 Markdown 或其他文字：
+[{"id": ${rowIndex}, "suggested": "優化後的英文名稱", "comment": "原因說明（2-3句）：改了什麼、為什麼這樣改、加入了什麼 SEO 關鍵字"}]
 
-3. SEO STRUCTURE (follow Canadian grocery naming patterns):
-   - Pattern A (Descriptive): "[Product Type], [Flavor] - [Authentic Chinese Name]"
-     Example: "dumplings, spicy - szechuan wontons (10 pcs)"
-   - Pattern B (Brand-forward): "[Authentic Name] [Product Type], [Flavor]"
-     Example: "mapo tofu, extra spicy (500g)"
-   - Pattern C (Simple): "[Flavor] [Product Type]"
-     Example: "spicy braised pork rice"
+【判斷邏輯】
+1. 目前英文名稱是否已經足夠地道且 SEO 友好？
+2. 如果需要改，是微調還是重新命名？
+3. 加入了哪些關鍵字可以提升 UberEats 搜尋排名？
+4. 如何保持與同類產品的命名一致性？
 
-4. CANADIAN GROCERY SEO BEST PRACTICES:
-   - Lowercase, hyphenated for multi-word compounds
-   - Weight/size in parentheses at end: (500g) | (10 pcs) | (1L)
-   - Keywords search order: flavor > product type > brand/region
-   - Common search terms: "instant", "ready-to-eat", "frozen", "spicy", "original"
-   - Hyphenation: "hong-shao", "mapo-tofu", "braised-pork"
-
-5. AUTHENTICITY vs ACCESSIBILITY BALANCE:
-   - Preserve Chinese culinary terms if they are SEARCHABLE (mapo tofu, kong pao chicken)
-   - If term is unknown to mainstream Canadians, add descriptive modifier
-   - Canadian customers DO search for authentic Chinese terms they've learned
-
-INPUT FOR THIS PRODUCT:
-- Chinese Product Name: "${chineseName}"
-- Current English Name: "${englishName}"
-
-DECISION LOGIC:
-1. Identify the PRODUCT FAMILY (core product type)
-2. Identify the FLAVOR/MODIFIER
-3. Check if this product shares a family with others (you'll apply the same base name)
-4. Apply STANDARDIZED flavor mapping
-5. Construct name using SEO-optimal structure
-
-OUTPUT FORMAT (JSON only, no markdown):
-{
-    "optimizedName": "seo-optimized name in lowercase, hyphenated",
-    "reason": "Why this name was chosen (2-3 sentences): what changed, what's consistent, what SEO keyword was added/removed",
-    "productFamily": "core product family name",
-    "flavorModifier": "standardized flavor term used"
-}
-
-EXAMPLES:
-- Input: "香辣味牛肉拉面" → Output: { "optimizedName": "spicy beef ramen noodles", "reason": "Standardized '香辣' to 'spicy'. Kept 'beef ramen noodles' as searchable base. Lowercase hyphenated for SEO.", "productFamily": "ramen noodles", "flavorModifier": "spicy" }
-- Input: "麻辣味牛肉拉面" → Output: { "optimizedName": "mala beef ramen noodles", "reason": "'麻辣' specifically means numbing-spicy (mala), not generic spicy. Used 'mala' to be authentic. Same base 'beef ramen noodles' as sibling products.", "productFamily": "ramen noodles", "flavorModifier": "mala" }
-- Input: "红烧肉盖浇饭" → Output: { "optimizedName": "hong shao pork rice in sauce", "reason": "'红烧' translated to 'hong shao' for authenticity + 'in sauce' for clarity. 'Pork rice' as searchable base.", "productFamily": "pork rice", "flavorModifier": "hong shao" }
-
-Respond with ONLY valid JSON.`
+請直接輸出 JSON 陣列，不要有多餘的解釋。`
 
             const response = await fetch(CONFIG.API_URL, {
                 method: 'POST',
@@ -1022,10 +999,12 @@ Respond with ONLY valid JSON.`
                 return JSON.parse(cleanContent);
             } catch (e) {
                 console.error('JSON parse error, raw content:', content);
-                return {
-                    optimizedName: englishName,
-                    reason: 'Parse error - retained original name'
-                };
+                // Fallback: return array format with original name
+                return [{
+                    id: rowIndex,
+                    suggested: englishName,
+                    comment: 'Parse error - original name retained'
+                }];
             }
         }
 
