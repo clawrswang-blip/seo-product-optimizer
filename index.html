@@ -954,16 +954,17 @@
 - 目前英文名稱: "${englishName}"
 
 【輸出格式】
-請輸出純 JSON 陣列，不要包含任何 Markdown 或其他文字：
-[{"id": ${rowIndex}, "suggested": "優化後的英文名稱", "comment": "原因說明（2-3句）：改了什麼、為什麼這樣改、加入了什麼 SEO 關鍵字"}]
+你只能輸出以下格式的純 JSON，絕對不能輸出任何其他文字、解釋或 Markdown：
+[{"id":${rowIndex},"suggested":"優化後英文名","comment":"1句原因"}]
 
-【判斷邏輯】
-1. 目前英文名稱是否已經足夠地道且 SEO 友好？
-2. 如果需要改，是微調還是重新命名？
-3. 加入了哪些關鍵字可以提升 UberEats 搜尋排名？
-4. 如何保持與同類產品的命名一致性？
+【嚴格規則】
+- 只輸出上述 JSON 格式
+- 不要加 ```json 或任何 Markdown 標記
+- 不要加任何解釋性文字
+- suggested 最多8個單詞
+- comment 最多15個漢字
 
-請直接輸出 JSON 陣列，不要有多餘的解釋。`
+直接輸出 JSON：
 
             const response = await fetch(CONFIG.API_URL, {
                 method: 'POST',
@@ -981,7 +982,7 @@
                         enabled: true
                     },
                     temperature: 0.3,
-                    max_tokens: 200
+                    max_tokens: 600
                 })
             });
 
