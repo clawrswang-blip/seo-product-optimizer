@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Product Name Optimizer | Powered by AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --primary-light: #D1FAE5;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --error: #EF4444;
+            --error-light: #FEE2E2;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #F0FDF4 0%, #ECFEFF 100%);
+            min-height: 100vh;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .header-badge {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            border: 2px dashed var(--gray-300);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 40px;
+        }
+
+        .upload-section:hover, .upload-section.drag-over {
+            border-color: var(--primary);
+            background: var(--gray-50);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .upload-section p {
+            color: var(--gray-500);
+            font-size: 15px;
+        }
+
+        .upload-section .file-types {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .file-type-badge {
+            background: var(--gray-100);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Sample Format Section */
+        .sample-format {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .sample-format h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .sample-table th {
+            background: var(--gray-100);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .sample-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .sample-table .col-b { color: var(--primary-dark); font-weight: 500; }
+        .sample-table .col-c { color: var(--warning-dark, #D97706); font-weight: 500; }
+        .sample-table .col-d { color: var(--primary); font-weight: 600; }
+        .sample-table .col-e { color: var(--gray-500); font-size: 13px; }
+
+        /* Action Buttons */
+        .action-bar {
+            display: none;
+            gap: 16px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-bar.visible {
+            display: flex;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: var(--gray-300);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        /* Data Table */
+        .data-section {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 40px;
+        }
+
+        .data-section.visible {
+            display: block;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--gray-50);
+        }
+
+        .table-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .table-info {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table th {
+            background: var(--primary);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .data-table th:nth-child(1) { background: var(--gray-600); min-width: 50px; }
+        .data-table th:nth-child(2) { background: var(--primary-dark); min-width: 150px; }
+        .data-table th:nth-child(3) { background: var(--warning); min-width: 200px; }
+        .data-table th:nth-child(4) { background: var(--primary); min-width: 200px; }
+        .data-table th:nth-child(5) { background: #6366F1; min-width: 280px; }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: top;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        .data-table tbody tr:nth-child(even):hover {
+            background: var(--gray-100);
+        }
+
+        .row-num {
+            color: var(--gray-400);
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .cell-chinese {
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .cell-english-original {
+            color: var(--gray-700);
+        }
+
+        .cell-english-optimized {
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--primary-light);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .cell-reason {
+            color: var(--gray-600);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        .status-processing {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .status-good {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .status-optimized {
+            background: #EEF2FF;
+            color: #4F46E5;
+        }
+
+        /* Processing Overlay */
+        .processing-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .processing-overlay.visible {
+            display: flex;
+        }
+
+        .processing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 50px;
+            text-align: center;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .processing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .processing-card p {
+            color: var(--gray-500);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .progress-container {
+            background: var(--gray-100);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #34D399);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .main-container {
+                padding: 20px;
+            }
+
+            .upload-section {
+                padding: 40px 20px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🔍</div>
+            <h1>SEO Product Name Optimizer</h1>
+        </div>
+        <div class="header-badge">AI-Powered • Canadian Market</div>
+    </header>
+
+    <main class="main-container">
+        <!-- Upload Section -->
+        <div class="upload-section" id="drop-zone">
+            <div class="upload-icon">📊</div>
+            <h2>Upload Your Excel File</h2>
+            <p>Drag and drop your .xlsx or .xls file here, or click to browse</p>
+            <div class="file-types">
+                <span class="file-type-badge">.xlsx</span>
+                <span class="file-type-badge">.xls</span>
+                <span class="file-type-badge">B: Chinese Name</span>
+                <span class="file-type-badge">C: English Name</span>
+            </div>
+        </div>
+        <input type="file" id="file-input" accept=".xlsx,.xls">
+
+        <!-- Sample Format -->
+        <div class="sample-format">
+            <h3>📋 Expected Excel Format</h3>
+            <table class="sample-table">
+                <thead>
+                    <tr>
+                        <th>Row</th>
+                        <th class="col-b">B: Chinese Name</th>
+                        <th class="col-c">C: Original English</th>
+                        <th class="col-d">D: Optimized English</th>
+                        <th class="col-e">E: Optimization Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="col-b">麻婆豆腐</td>
+                        <td class="col-c">Mapo Tofu</td>
+                        <td class="col-d">(Auto-filled)</td>
+                        <td class="col-e">(Auto-filled)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="col-b">红烧肉</td>
+                        <td class="col-c">Braised Pork</td>
+                        <td class="col-d">Hong Shao Pork (Braised)</td>
+                        <td class="col-e">Added "Hong Shao" for brand authenticity + SEO keywords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar" id="action-bar">
+            <button class="btn btn-primary" id="optimize-btn">
+                <span>✨</span> Start SEO Optimization
+            </button>
+            <button class="btn btn-secondary" id="reset-btn">
+                <span>↺</span> Upload New File
+            </button>
+        </div>
+
+        <!-- Data Preview Section -->
+        <div class="data-section" id="data-section">
+            <div class="table-header">
+                <h3>📋 Data Preview & Optimization Results</h3>
+                <span class="table-info" id="table-info">0 rows loaded</span>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table" id="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>B: Chinese Name</th>
+                            <th>C: Original English</th>
+                            <th>D: Optimized English</th>
+                            <th>E: Optimization Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Processing Overlay -->
+    <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-card">
+            <div class="processing-spinner"></div>
+            <h3>AI Analyzing...</h3>
+            <p id="processing-status">Preparing optimization engine</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0 / 0 rows processed</div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        SEO Optimizer v1.0 • Powered by Gemini AI • Canadian Grocery Market Specialist
+    </footer>
+
+    <!-- SheetJS Library -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const CONFIG = {
+            API_URL: 'https://openrouter.ai/api/v1/chat/completions',
+            API_KEY: 'YOUR_OPENROUTER_API_KEY',
+            MODEL: 'google/gemini-3.1-flash-lite-preview',
+            MAX_CONCURRENT: 3,
+            DELAY_BETWEEN_BATCHES: 500
+        };
+
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        let state = {
+            originalData: [],
+            optimizedData: [],
+            headers: [],
+            isProcessing: false,
+            totalRows: 0,
+            processedRows: 0
+        };
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const DOM = {
+            dropZone: document.getElementById('drop-zone'),
+            fileInput: document.getElementById('file-input'),
+            actionBar: document.getElementById('action-bar'),
+            optimizeBtn: document.getElementById('optimize-btn'),
+            resetBtn: document.getElementById('reset-btn'),
+            dataSection: document.getElementById('data-section'),
+            tableBody: document.getElementById('table-body'),
+            tableInfo: document.getElementById('table-info'),
+            processingOverlay: document.getElementById('processing-overlay'),
+            processingStatus: document.getElementById('processing-status'),
+            progressBar: document.getElementById('progress-bar'),
+            progressText: document.getElementById('progress-text')
+        };
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // File Input - Click
+        DOM.dropZone.addEventListener('click', () => {
+            if (!state.isProcessing) {
+                DOM.fileInput.click();
+            }
+        });
+
+        // File Input - Change
+        DOM.fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        // Drag and Drop
+        DOM.dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!state.isProcessing) {
+                DOM.dropZone.classList.add('drag-over');
+            }
+        });
+
+        DOM.dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            DOM.dropZone.classList.remove('drag-over');
+        });
+
+        DOM.dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            DOM.dropZone.classList.remove('drag-over');
+            if (!state.isProcessing && e.dataTransfer.files.length > 0) {
+                handleFileUpload(e.dataTransfer.files[0]);
+            }
+        });
+
+        // Optimize Button
+        DOM.optimizeBtn.addEventListener('click', startOptimization);
+
+        // Reset Button
+        DOM.resetBtn.addEventListener('click', resetApp);
+
+        // ============================================
+        // FILE HANDLING
+        // ============================================
+        function handleFileUpload(file) {
+            const validExtensions = ['.xlsx', '.xls'];
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+            if (!validExtensions.includes(fileExtension)) {
+                alert('Please upload a valid Excel file (.xlsx or .xls)');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert to JSON with headers
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+
+                    if (jsonData.length < 2) {
+                        alert('The file appears to be empty or has no data rows.');
+                        return;
+                    }
+
+                    // Extract headers and data
+                    state.headers = jsonData[0].map(h => String(h).trim());
+                    state.originalData = jsonData.slice(1).filter(row =>
+                        row.some(cell => cell !== undefined && cell !== '' && String(cell).trim() !== '')
+                    );
+
+                    // Deep copy for optimized data
+                    state.optimizedData = JSON.parse(JSON.stringify(state.originalData));
+
+                    // Render table
+                    renderTable();
+                    DOM.dataSection.classList.add('visible');
+                    DOM.actionBar.classList.add('visible');
+                    DOM.tableInfo.textContent = `${state.originalData.length} rows loaded`;
+
+                } catch (error) {
+                    console.error('File parsing error:', error);
+                    alert('Error parsing the Excel file. Please ensure it follows the expected format.');
+                }
+            };
+
+            reader.onerror = () => {
+                alert('Error reading the file. Please try again.');
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ============================================
+        // TABLE RENDERING
+        // ============================================
+        function renderTable() {
+            let html = '';
+
+            state.originalData.forEach((row, index) => {
+                const chineseName = String(row[1] || '').trim();
+                const originalEnglish = String(row[2] || '').trim();
+                const optimizedEnglish = String(state.optimizedData[index]?.[3] || '').trim();
+                const reason = String(state.optimizedData[index]?.[4] || '').trim();
+
+                const status = getRowStatus(optimizedEnglish, reason);
+
+                html += `
+                    <tr data-index="${index}">
+                        <td class="row-num">${index + 1}</td>
+                        <td class="cell-chinese">${escapeHtml(chineseName)}</td>
+                        <td class="cell-english-original">${escapeHtml(originalEnglish)}</td>
+                        <td>${optimizedEnglish ? `<span class="cell-english-optimized">${escapeHtml(optimizedEnglish)}</span>` : '<span class="status-badge status-pending">⏳ Pending</span>'}</td>
+                        <td class="cell-reason">${reason ? escapeHtml(reason) : '<span class="status-badge status-pending">Awaiting analysis...</span>'}</td>
+                    </tr>
+                `;
+            });
+
+            DOM.tableBody.innerHTML = html;
+        }
+
+        function getRowStatus(optimized, reason) {
+            if (!optimized && !reason) return 'pending';
+            if (optimized && reason) return 'optimized';
+            return 'good';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // AI OPTIMIZATION
+        // ============================================
+        async function startOptimization() {
+            if (state.isProcessing) return;
+            if (state.originalData.length === 0) {
+                alert('No data to optimize. Please upload a file first.');
+                return;
+            }
+
+            state.isProcessing = true;
+            state.processedRows = 0;
+            state.totalRows = state.originalData.length;
+
+            DOM.optimizeBtn.disabled = true;
+            DOM.processingOverlay.classList.add('visible');
+
+            try {
+                // Process in batches to avoid rate limiting
+                for (let i = 0; i < state.originalData.length; i += CONFIG.MAX_CONCURRENT) {
+                    if (!state.isProcessing) break;
+
+                    const batch = [];
+                    for (let j = 0; j < CONFIG.MAX_CONCURRENT && i + j < state.originalData.length; j++) {
+                        batch.push(processRow(i + j));
+                    }
+
+                    await Promise.all(batch);
+
+                    state.processedRows = Math.min(i + CONFIG.MAX_CONCURRENT, state.originalData.length);
+                    updateProgress();
+
+                    if (i + CONFIG.MAX_CONCURRENT < state.originalData.length) {
+                        await sleep(CONFIG.DELAY_BETWEEN_BATCHES);
+                    }
+                }
+
+                DOM.processingStatus.textContent = 'Optimization Complete!';
+                DOM.progressText.textContent = `${state.totalRows} / ${state.totalRows} rows processed`;
+
+                // Auto-download after completion
+                setTimeout(() => {
+                    downloadExcel();
+                    DOM.processingOverlay.classList.remove('visible');
+                    state.isProcessing = false;
+                    DOM.optimizeBtn.disabled = false;
+                }, 1500);
+
+            } catch (error) {
+                console.error('Optimization error:', error);
+                DOM.processingStatus.textContent = 'Error occurred. Please try again.';
+                setTimeout(() => {
+                    DOM.processingOverlay.classList.remove('visible');
+                    state.isProcessing = false;
+                    DOM.optimizeBtn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        async function processRow(index) {
+            const row = state.originalData[index];
+            const chineseName = String(row[1] || '').trim();
+            const originalEnglish = String(row[2] || '').trim();
+
+            // Skip empty rows
+            if (!chineseName || !originalEnglish) {
+                state.optimizedData[index][3] = originalEnglish;
+                state.optimizedData[index][4] = 'Original name kept - insufficient data for optimization';
+                updateRowInTable(index);
+                return;
+            }
+
+            // Update status to processing
+            updateRowStatus(index, 'processing');
+            DOM.processingStatus.textContent = `Analyzing: ${chineseName}`;
+
+            try {
+                const result = await callSEOAI(chineseName, originalEnglish, state.originalData);
+
+                state.optimizedData[index][3] = result.optimizedName;
+                state.optimizedData[index][4] = result.reason;
+
+                // Determine if original was already good
+                const isGood = result.optimizedName.toLowerCase().trim() === originalEnglish.toLowerCase().trim() ||
+                              result.reason.toLowerCase().includes('already optimal') ||
+                              result.reason.toLowerCase().includes('already good');
+
+                updateRowStatus(index, isGood ? 'good' : 'optimized');
+
+            } catch (error) {
+                console.error(`Error processing row ${index}:`, error);
+                state.optimizedData[index][3] = originalEnglish;
+                state.optimizedData[index][4] = 'Error - original name retained';
+                updateRowStatus(index, 'good');
+            }
+
+            updateRowInTable(index);
+        }
+
+        async function callSEOAI(chineseName, englishName, contextData = null) {
+            const prompt = `You are an expert SEO consultant and Canadian grocery market localization specialist with deep expertise in Asian food product naming for Canadian grocery chains (T&T, Walmart, Costco, Save-On-Foods).
+
+TASK: Optimize Chinese food product names for Canadian grocery SEO. CRITICAL: Maintain CONSISTENT naming patterns across similar product families with different flavors/varieties.
+
+CONTEXT:
+- You are optimizing a BATCH of products. Similar products (same type, different flavor) MUST share the same English naming STRUCTURE.
+- Product Family = all variants of the same core product (e.g., "Taiwanese Beef Noodle Soup Base" with different spice levels)
+- Within a family: Keep the BASE NAME identical, vary only the FLAVOR/MODIFIER consistently
+
+NAMING CONVENTION RULES (apply strictly):
+
+1. BASE NAME (core product) stays CONSISTENT across flavors:
+   - ✅ "spicy braised pork rice" / "original braised pork rice" (consistent base)
+   - ✅ "szechuan spicy wontons" / "szechuan mild wontons"
+   - ❌ "braised pork over rice" / "pork rice with sauce" (inconsistent)
+
+2. FLAVOR/MODIFIER standardization (MUST use these exact mappings):
+   - 原味 / 原汁 → "original"
+   - 香辣 / 辣味 / 微辣 / 麻辣 → "spicy" (or "mala" for numbing-spicy specifically)
+   - 特辣 / 超辣 / 极辣 → "extra spicy" or "very spicy"
+   - 甜辣 → "sweet chili"
+   - 酱香 / 酱汁 → "in sauce" or "with sauce"
+   - 红烧 → "hong shao" (authentic) or "braised" (accessible)
+   - 卤味 → "lu wei" (authentic) or "braised" (accessible)
+   - 炸鸡 → "fried chicken" (never just "fried" alone)
+   - 烤鸭 → "roasted duck"
+   - 牛肉 → "beef" | 猪肉 → "pork" | 鸡肉 → "chicken" | 羊肉 → "lamb"
+
+3. SEO STRUCTURE (follow Canadian grocery naming patterns):
+   - Pattern A (Descriptive): "[Product Type], [Flavor] - [Authentic Chinese Name]"
+     Example: "dumplings, spicy - szechuan wontons (10 pcs)"
+   - Pattern B (Brand-forward): "[Authentic Name] [Product Type], [Flavor]"
+     Example: "mapo tofu, extra spicy (500g)"
+   - Pattern C (Simple): "[Flavor] [Product Type]"
+     Example: "spicy braised pork rice"
+
+4. CANADIAN GROCERY SEO BEST PRACTICES:
+   - Lowercase, hyphenated for multi-word compounds
+   - Weight/size in parentheses at end: (500g) | (10 pcs) | (1L)
+   - Keywords search order: flavor > product type > brand/region
+   - Common search terms: "instant", "ready-to-eat", "frozen", "spicy", "original"
+   - Hyphenation: "hong-shao", "mapo-tofu", "braised-pork"
+
+5. AUTHENTICITY vs ACCESSIBILITY BALANCE:
+   - Preserve Chinese culinary terms if they are SEARCHABLE (mapo tofu, kong pao chicken)
+   - If term is unknown to mainstream Canadians, add descriptive modifier
+   - Canadian customers DO search for authentic Chinese terms they've learned
+
+INPUT FOR THIS PRODUCT:
+- Chinese Product Name: "${chineseName}"
+- Current English Name: "${englishName}"
+
+DECISION LOGIC:
+1. Identify the PRODUCT FAMILY (core product type)
+2. Identify the FLAVOR/MODIFIER
+3. Check if this product shares a family with others (you'll apply the same base name)
+4. Apply STANDARDIZED flavor mapping
+5. Construct name using SEO-optimal structure
+
+OUTPUT FORMAT (JSON only, no markdown):
+{
+    "optimizedName": "seo-optimized name in lowercase, hyphenated",
+    "reason": "Why this name was chosen (2-3 sentences): what changed, what's consistent, what SEO keyword was added/removed",
+    "productFamily": "core product family name",
+    "flavorModifier": "standardized flavor term used"
+}
+
+EXAMPLES:
+- Input: "香辣味牛肉拉面" → Output: { "optimizedName": "spicy beef ramen noodles", "reason": "Standardized '香辣' to 'spicy'. Kept 'beef ramen noodles' as searchable base. Lowercase hyphenated for SEO.", "productFamily": "ramen noodles", "flavorModifier": "spicy" }
+- Input: "麻辣味牛肉拉面" → Output: { "optimizedName": "mala beef ramen noodles", "reason": "'麻辣' specifically means numbing-spicy (mala), not generic spicy. Used 'mala' to be authentic. Same base 'beef ramen noodles' as sibling products.", "productFamily": "ramen noodles", "flavorModifier": "mala" }
+- Input: "红烧肉盖浇饭" → Output: { "optimizedName": "hong shao pork rice in sauce", "reason": "'红烧' translated to 'hong shao' for authenticity + 'in sauce' for clarity. 'Pork rice' as searchable base.", "productFamily": "pork rice", "flavorModifier": "hong shao" }
+
+Respond with ONLY valid JSON.`
+
+            const response = await fetch(CONFIG.API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${CONFIG.API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: CONFIG.MODEL,
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }],
+                    temperature: 0.3,
+                    max_tokens: 200
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content || '{}';
+
+            // Clean the response - remove markdown code blocks if present
+            let cleanContent = content.trim();
+            if (cleanContent.startsWith('```')) {
+                cleanContent = cleanContent.replace(/^```json\s*/i, '').replace(/\s*```$/, '');
+            }
+
+            try {
+                return JSON.parse(cleanContent);
+            } catch (e) {
+                console.error('JSON parse error, raw content:', content);
+                return {
+                    optimizedName: englishName,
+                    reason: 'Parse error - retained original name'
+                };
+            }
+        }
+
+        // ============================================
+        // UI UPDATES
+        // ============================================
+        function updateProgress() {
+            const percentage = Math.round((state.processedRows / state.totalRows) * 100);
+            DOM.progressBar.style.width = `${percentage}%`;
+            DOM.progressText.textContent = `${state.processedRows} / ${state.totalRows} rows processed`;
+        }
+
+        function updateRowInTable(index) {
+            const row = DOM.tableBody.querySelector(`tr[data-index="${index}"]`);
+            if (!row) return;
+
+            const optimized = state.optimizedData[index]?.[3] || '';
+            const reason = state.optimizedData[index]?.[4] || '';
+
+            const optimizedCell = row.cells[3];
+            const reasonCell = row.cells[4];
+
+            if (optimized) {
+                optimizedCell.innerHTML = `<span class="cell-english-optimized">${escapeHtml(optimized)}</span>`;
+            }
+
+            if (reason) {
+                reasonCell.innerHTML = escapeHtml(reason);
+            }
+        }
+
+        function updateRowStatus(index, status) {
+            const row = DOM.tableBody.querySelector(`tr[data-index="${index}"]`);
+            if (!row) return;
+
+            const statusCell = row.cells[3];
+            const statusConfig = {
+                pending: { class: 'status-pending', text: '⏳ Pending' },
+                processing: { class: 'status-processing', text: '🔄 Analyzing...' },
+                good: { class: 'status-good', text: '✅ Good' },
+                optimized: { class: 'status-optimized', text: '✨ Optimized' }
+            };
+
+            const config = statusConfig[status] || statusConfig.pending;
+            statusCell.innerHTML = `<span class="status-badge ${config.class}">${config.text}</span>`;
+        }
+
+        // ============================================
+        // EXPORT / DOWNLOAD
+        // ============================================
+        function downloadExcel() {
+            // Prepare output data
+            const outputData = [
+                ['Row', 'B: Chinese Name', 'C: Original English', 'D: Optimized English', 'E: Optimization Reason']
+            ];
+
+            state.originalData.forEach((row, index) => {
+                const optimizedRow = state.optimizedData[index] || [];
+                outputData.push([
+                    index + 1,
+                    row[1] || '',
+                    row[2] || '',
+                    optimizedRow[3] || '',
+                    optimizedRow[4] || ''
+                ]);
+            });
+
+            // Create workbook
+            const ws = XLSX.utils.aoa_to_sheet(outputData);
+
+            // Set column widths for better readability
+            ws['!cols'] = [
+                { wch: 5 },   // Row
+                { wch: 20 },  // Chinese Name
+                { wch: 30 },  // Original English
+                { wch: 35 },  // Optimized English
+                { wch: 50 }   // Reason
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'SEO Optimized Results');
+
+            // Generate filename with timestamp
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const filename = `SEO_Optimized_Results_${timestamp}.xlsx`;
+
+            // Download
+            XLSX.writeFile(wb, filename);
+        }
+
+        // ============================================
+        // RESET
+        // ============================================
+        function resetApp() {
+            state = {
+                originalData: [],
+                optimizedData: [],
+                headers: [],
+                isProcessing: false,
+                totalRows: 0,
+                processedRows: 0
+            };
+
+            DOM.fileInput.value = '';
+            DOM.tableBody.innerHTML = '';
+            DOM.dataSection.classList.remove('visible');
+            DOM.actionBar.classList.remove('visible');
+            DOM.optimizeBtn.disabled = false;
+            DOM.processingOverlay.classList.remove('visible');
+            DOM.progressBar.style.width = '0%';
+        }
+
+        // ============================================
+        // UTILITIES
+        // ============================================
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
